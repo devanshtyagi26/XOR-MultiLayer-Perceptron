@@ -11,15 +11,15 @@ class NeuralNetwork {
     this.hidden_nodes = hidden_nodes;
     this.output_nodes = output_nodes;
 
-    this.weights_input_hidden = tf.randomNormal(
+    this.weights_input_hidden = tf.randomUniform(
       [this.hidden_nodes, this.input_nodes],
-      0,
-      Math.sqrt(2 / (this.input_nodes + this.hidden_nodes))
+      -1,
+      1
     );
-    this.weights_hidden_output = tf.randomNormal(
+    this.weights_hidden_output = tf.randomUniform(
       [this.output_nodes, this.hidden_nodes],
-      0,
-      Math.sqrt(2 / (this.hidden_nodes + this.output_nodes))
+      -1,
+      1
     );
 
     this.bias_hidden = tf.randomUniform([this.hidden_nodes, 1], -1, 1);
@@ -30,13 +30,13 @@ class NeuralNetwork {
 
   feedForward(input_array) {
     let inputs = tf.tensor2d(input_array, [input_array.length, 1]);
-
     let hidden = tf.matMul(this.weights_input_hidden, inputs);
-    hidden = tf.add(hidden, this.bias_hidden);
-    hidden = tf.relu(hidden);
+
+    hidden = hidden.add(this.bias_hidden);
+    hidden = hidden.sigmoid();
 
     let outputs = tf.matMul(this.weights_hidden_output, hidden);
-    outputs = tf.add(outputs, this.bias_output);
+    outputs = outputs.add(this.bias_output);
     outputs = outputs.sigmoid();
     return outputs;
   }
@@ -46,12 +46,13 @@ class NeuralNetwork {
 
     let hidden = tf.matMul(this.weights_input_hidden, inputs);
     hidden = tf.add(hidden, this.bias_hidden);
-    hidden = tf.relu(hidden);
+    hidden = hidden.sigmoid();
 
     let outputs = tf.matMul(this.weights_hidden_output, hidden);
     outputs = tf.add(outputs, this.bias_output);
     outputs = outputs.sigmoid();
 
+    //here currently
     let targets = tf.tensor2d(target_array, [target_array.length, 1]);
 
     let output_errors = tf.sub(targets, outputs);
