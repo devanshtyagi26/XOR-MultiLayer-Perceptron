@@ -1,9 +1,6 @@
 function sigmoidGradient(sigmoidValue) {
   return sigmoidValue.mul(tf.sub(1, sigmoidValue));
 }
-function reluGradient(value) {
-  return value.greater(0).toFloat();
-}
 
 class NeuralNetwork {
   constructor(input_nodes, hidden_nodes, output_nodes) {
@@ -25,7 +22,7 @@ class NeuralNetwork {
     this.bias_hidden = tf.randomUniform([this.hidden_nodes, 1], -1, 1);
     this.bias_output = tf.randomUniform([this.output_nodes, 1], -1, 1);
 
-    this.learningRate = 0.001;
+    this.learningRate = 0.1;
   }
 
   feedForward(input_array) {
@@ -52,10 +49,9 @@ class NeuralNetwork {
     outputs = tf.add(outputs, this.bias_output);
     outputs = outputs.sigmoid();
 
-    //here currently
     let targets = tf.tensor2d(target_array, [target_array.length, 1]);
-
     let output_errors = tf.sub(targets, outputs);
+
     let gradients = sigmoidGradient(outputs);
 
     gradients = gradients.mul(output_errors);
@@ -79,7 +75,7 @@ class NeuralNetwork {
       output_errors
     );
 
-    let hidden_gradient = reluGradient(hidden);
+    let hidden_gradient = sigmoidGradient(hidden);
 
     hidden_gradient = hidden_gradient.mul(hidden_errors);
     hidden_gradient = hidden_gradient.mul(this.learningRate);
@@ -94,7 +90,6 @@ class NeuralNetwork {
       this.weights_input_hidden,
       weights_input_hidden_Deltas
     );
-
     this.bias_hidden = tf.add(this.bias_hidden, hidden_gradient);
   }
 }

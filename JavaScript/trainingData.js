@@ -13,6 +13,6 @@ export const training_data = [
   },
   {
     inputs: [1, 1],
-    targets: [1],
+    targets: [0],
   },
 ];
