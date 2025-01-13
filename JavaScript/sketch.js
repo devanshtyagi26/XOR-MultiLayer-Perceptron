@@ -18,7 +18,7 @@ document
     // Show canvas container and activate canvas
     document.getElementById("canvasContainer").style.display = "flex";
 
-    canvas = createCanvas(canvasWidth, canvasHeight);
+    canvas = createCanvas(canvasWidth, canvasHeight, WEBGL);
     canvas.parent("canvasContainer"); // Attach canvas to #canvasContainer
 
     canvas.style("background", "grey");
@@ -33,13 +33,7 @@ document
     }
 
     // Initialize the neural network
-    nn = new NeuralNetwork(2, 2, 1);
-
-    // Test the neural network with different inputs
-    console.log(nn.feedForward([0, 0]));
-    console.log(nn.feedForward([1, 1]));
-    console.log(nn.feedForward([1, 0]));
-    console.log(nn.feedForward([0, 1]));
+    nn = new NeuralNetwork(2, 8, 1);
 
     isCanvasActive = true;
   });
@@ -48,31 +42,76 @@ window.setup = function () {
   document.getElementById("canvasContainer").style.display = "none";
 };
 
-window.draw = function () {
+// window.draw = function () {
+  //   if (!isCanvasActive) {
+    //     return; // Don't execute draw until the form is submitted
+    //   }
+    //   for (let i = 0; i < 500; i++) {
+      //     let data = random(training_data); // Correct way to pick random data
+      //     nn.train(data.inputs, data.targets);
+      //   }
+      
+      //   nn.setLearningRate(0.0001);
+      //   let resolution = 5;
+      //   let cols = width / resolution;
+      //   let rows = height / resolution;
+      //   for (let i = 0; i < cols; i++) {
+//     for (let j = 0; j < rows; j++) {
+  //       let p = i / cols;
+//       let q = j / rows;
+//       let inputs = [p, q];
+//       let y = nn.feedForward(inputs);
+//       noStroke();
+//       fill(y * 255);
+//       rect(i * resolution, j * resolution, resolution, resolution);
+//     }
+//   }
+// };
+
+// 3D
+  window.draw = function () {
   if (!isCanvasActive) {
-    return; // Don't execute draw until the form is submitted
+    return; // Stop execution if the canvas is not active
   }
+
+  background(30);
+  rotateX(PI / 3); // Rotate to get a better 3D perspective
+  translate(-width / 2, -height / 2);
+
+  // Train the neural network with random samples
   for (let i = 0; i < 500; i++) {
-    let data = random(training_data); // Correct way to pick random data
+    let data = random(training_data); // Replace with your dataset
     nn.train(data.inputs, data.targets);
   }
 
   nn.setLearningRate(0.0001);
   let resolution = 5;
-  let cols = width / resolution;
-  let rows = height / resolution;
+    let cols = width / resolution;
+    let rows = height / resolution;
+  // Draw 3D graph based on neural network outputs
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       let p = i / cols;
       let q = j / rows;
       let inputs = [p, q];
-      let y = nn.feedForward(inputs);
+      let y = nn.feedForward(inputs); // Neural network prediction
+
+      // Map the output to height
+      let h = map(y, 0, 1, -150, 150);
+
+      // Color based on output
+      let col = color(map(y, 0, 1, 0, 255), 150, 255);
+
+      // Draw box for each point
+      push();
+      translate(i * resolution, j * resolution, h / 2); // Adjust position
+      fill(col);
       noStroke();
-      fill(y * 255);
-      rect(i * resolution, j * resolution, resolution, resolution);
+      box(resolution, resolution, h); // Create 3D box
+      pop();
     }
   }
-};
+}
 
 // Function to clear all variables
 function clearCanvasVariables() {
