@@ -1,7 +1,10 @@
-import Matrix from "./matrixMath";
+import Matrix from "./matrixMath.js";
 
+function sigmoid(x) {
+  return 1 / (1 + Math.exp(-x));
+}
 function sigmoidGradient(sigmoidValue) {
-  return sigmoidValue.mul(tf.sub(1, sigmoidValue));
+  return sigmoidValue * (1 - sigmoidValue);
 }
 
 class NeuralNetwork {
@@ -26,77 +29,72 @@ class NeuralNetwork {
     this.bias_hidden.randomize();
     this.bias_output.randomize();
 
-    this.learningRate = 0.1; 
+    this.learningRate = 0.1;
   }
 
   feedForward(input_array) {
-    let inputs = tf.tensor2d(input_array, [input_array.length, 1]);
-    let hidden = tf.matMul(this.weights_input_hidden, inputs);
+    let inputs = Matrix.fromArray(input_array);
+    let hidden = Matrix.multiply(this.weights_input_hidden, inputs);
+    hidden.add(this.bias_hidden);
+    hidden.map(sigmoid);
 
-    hidden = hidden.add(this.bias_hidden);
-    hidden = hidden.sigmoid();
+    let outputs = Matrix.multiply(this.weights_hidden_output, hidden);
 
-    let outputs = tf.matMul(this.weights_hidden_output, hidden);
-    outputs = outputs.add(this.bias_output);
-    outputs = outputs.sigmoid();
-    return outputs;
+    outputs.add(this.bias_output);
+    outputs.map(sigmoid);
+    return outputs.toArray();
   }
 
   train(input_array, target_array) {
-    // tf.tidy(() => {
-    let inputs = tf.tensor2d(input_array, [input_array.length, 1]);
+    let inputs = Matrix.fromArray(input_array);
+    let hidden = Matrix.multiply(this.weights_input_hidden, inputs);
+    hidden.add(this.bias_hidden);
+    hidden.map(sigmoid);
 
-    let hidden = tf.matMul(this.weights_input_hidden, inputs);
-    hidden = tf.add(hidden, this.bias_hidden);
-    hidden = hidden.sigmoid();
+    let outputs = Matrix.multiply(this.weights_hidden_output, hidden);
 
-    let outputs = tf.matMul(this.weights_hidden_output, hidden);
-    outputs = tf.add(outputs, this.bias_output);
-    outputs = outputs.sigmoid();
+    outputs.add(this.bias_output);
+    outputs.map(sigmoid);
 
-    let targets = tf.tensor2d(target_array, [target_array.length, 1]);
-    let output_errors = tf.sub(targets, outputs);
+    let targets = Matrix.fromArray(target_array);
+    let output_errors = Matrix.subtract(targets, outputs);
 
-    let gradients = sigmoidGradient(outputs);
+    let gradients = Matrix.map(outputs, sigmoidGradient);
 
-    gradients = gradients.mul(output_errors);
-    gradients = gradients.mul(this.learningRate);
+    gradients.multiply(output_errors);
+    gradients.multiply(this.learningRate);
 
-    let hidden_Transpose = tf.transpose(hidden);
-    let weights_hidden_output_Deltas = tf.matMul(gradients, hidden_Transpose);
-
-    this.weights_hidden_output = tf.add(
-      this.weights_hidden_output,
-      weights_hidden_output_Deltas
+    let hidden_Transpose = Matrix.transpose(hidden);
+    let weights_hidden_output_Deltas = Matrix.multiply(
+      gradients,
+      hidden_Transpose
     );
 
-    this.bias_output = tf.add(this.bias_output, gradients);
+    this.weights_hidden_output.add(weights_hidden_output_Deltas);
 
-    let weights_hidden_output_Transpose = tf.transpose(
+    this.bias_output.add(gradients);
+
+    let weights_hidden_output_Transpose = Matrix.transpose(
       this.weights_hidden_output
     );
-    let hidden_errors = tf.matMul(
+    let hidden_errors = Matrix.multiply(
       weights_hidden_output_Transpose,
       output_errors
     );
 
-    let hidden_gradient = sigmoidGradient(hidden);
+    let hidden_gradient = Matrix.map(hidden, sigmoidGradient);
 
-    hidden_gradient = hidden_gradient.mul(hidden_errors);
-    hidden_gradient = hidden_gradient.mul(this.learningRate);
+    hidden_gradient.multiply(hidden_errors);
+    hidden_gradient.multiply(this.learningRate);
 
-    let inputs_Transpose = tf.transpose(inputs);
-    let weights_input_hidden_Deltas = tf.matMul(
+    let inputs_Transpose = Matrix.transpose(inputs);
+    let weights_input_hidden_Deltas = Matrix.multiply(
       hidden_gradient,
       inputs_Transpose
     );
 
-    this.weights_input_hidden = tf.add(
-      this.weights_input_hidden,
-      weights_input_hidden_Deltas
-    );
-    this.bias_hidden = tf.add(this.bias_hidden, hidden_gradient);
-    // });
+    this.weights_input_hidden.add(weights_input_hidden_Deltas);
+    this.bias_hidden.add(hidden_gradient);
   }
 }
 
