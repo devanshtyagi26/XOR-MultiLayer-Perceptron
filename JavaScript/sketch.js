@@ -43,21 +43,21 @@ window.setup = function () {
 };
 
 // window.draw = function () {
-  //   if (!isCanvasActive) {
-    //     return; // Don't execute draw until the form is submitted
-    //   }
-    //   for (let i = 0; i < 500; i++) {
-      //     let data = random(training_data); // Correct way to pick random data
-      //     nn.train(data.inputs, data.targets);
-      //   }
-      
-      //   nn.setLearningRate(0.0001);
-      //   let resolution = 5;
-      //   let cols = width / resolution;
-      //   let rows = height / resolution;
-      //   for (let i = 0; i < cols; i++) {
+//   if (!isCanvasActive) {
+//     return; // Don't execute draw until the form is submitted
+//   }
+//   for (let i = 0; i < 500; i++) {
+//     let data = random(training_data); // Correct way to pick random data
+//     nn.train(data.inputs, data.targets);
+//   }
+
+//   nn.setLearningRate(0.0001);
+//   let resolution = 5;
+//   let cols = width / resolution;
+//   let rows = height / resolution;
+//   for (let i = 0; i < cols; i++) {
 //     for (let j = 0; j < rows; j++) {
-  //       let p = i / cols;
+//       let p = i / cols;
 //       let q = j / rows;
 //       let inputs = [p, q];
 //       let y = nn.feedForward(inputs);
@@ -69,14 +69,17 @@ window.setup = function () {
 // };
 
 // 3D
-  window.draw = function () {
+let angel = 0;
+window.draw = function () {
   if (!isCanvasActive) {
     return; // Stop execution if the canvas is not active
   }
 
   background(30);
-  rotateX(PI / 3); // Rotate to get a better 3D perspective
-  translate(-width / 2, -height / 2);
+  rotateX(PI); // Rotate to get a better 3D perspective
+  rotateY(angel); // Rotate to get a better 3D perspective
+  angel += 0.07;
+  translate(-width * 0.2, -height * 0.2);
 
   // Train the neural network with random samples
   for (let i = 0; i < 500; i++) {
@@ -86,8 +89,8 @@ window.setup = function () {
 
   nn.setLearningRate(0.0001);
   let resolution = 5;
-    let cols = width / resolution;
-    let rows = height / resolution;
+  let cols = width / resolution - 40;
+  let rows = height / resolution - 40;
   // Draw 3D graph based on neural network outputs
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
@@ -111,7 +114,7 @@ window.setup = function () {
       pop();
     }
   }
-}
+};
 
 // Function to clear all variables
 function clearCanvasVariables() {
