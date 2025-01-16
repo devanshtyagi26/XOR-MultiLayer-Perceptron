@@ -69,17 +69,20 @@ window.setup = function () {
 // };
 
 // 3D
-let angel = 0;
 window.draw = function () {
   if (!isCanvasActive) {
     return; // Stop execution if the canvas is not active
   }
 
   background(30);
-  rotateX(PI); // Rotate to get a better 3D perspective
-  rotateY(angel); // Rotate to get a better 3D perspective
-  angel += 0.07;
-  translate(-width * 0.2, -height * 0.2);
+  let rotationAngleZ = frameCount * 0.01;
+
+  // Shift the origin to the center of the canvas
+  // translate(width / 2, height / 2, 0);
+
+  // Rotate for a better 3D perspective (optional)
+  rotateX(PI / 4);
+  rotateZ(rotationAngleZ);
 
   // Train the neural network with random samples
   for (let i = 0; i < 500; i++) {
@@ -88,9 +91,14 @@ window.draw = function () {
   }
 
   nn.setLearningRate(0.0001);
-  let resolution = 5;
+  let resolution = 4;
   let cols = width / resolution - 40;
   let rows = height / resolution - 40;
+
+  // Center the graph by adjusting the translation
+  let xOffset = -(cols * resolution) / 2;
+  let yOffset = -(rows * resolution) / 2;
+
   // Draw 3D graph based on neural network outputs
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
@@ -103,14 +111,26 @@ window.draw = function () {
       let h = map(y, 0, 1, -150, 150);
 
       // Color based on output
-      let col = color(map(y, 0, 1, 0, 255), 150, 255);
+      let col = color(255, map(y, 0, 1, 0, 255), 0);
 
       // Draw box for each point
       push();
-      translate(i * resolution, j * resolution, h / 2); // Adjust position
+      translate(xOffset + i * resolution, yOffset + j * resolution, h / 2); // Adjust position
       fill(col);
       noStroke();
-      box(resolution, resolution, h); // Create 3D box
+      box(resolution, resolution, 5); // Create 3D box
+      pop();
+
+      // Synchronize rotation angles
+
+      // Draw the cube in 3D at the center of the canvas
+      push();
+      noFill(); // No fill for the cube
+      stroke(255); // Black stroke
+      strokeWeight(1); // Stroke thickness
+      // rotateX(PI / 4);
+      rotateZ(rotationAngleZ);
+      box(270); // Cube with size 100
       pop();
     }
   }
