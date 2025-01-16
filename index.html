@@ -16,7 +16,24 @@
     <section id="hero">
       <form class="variables" id="canvasForm">
         <div class="buttons">
-          <button type="submit">Submit</button>
+          <label class="container"
+            >2D
+            <input type="radio" checked="checked" name="radio" value="2D" />
+            <span class="checkmark"></span>
+          </label>
+          <label class="container"
+            >3D
+            <input type="radio" name="radio" value="3D" />
+            <span class="checkmark"></span>
+          </label>
+          <label class="container"
+            >Tensor
+            <input type="radio" name="radio" value="Tensor" />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="buttons">
+          <button type="submit" id="submit">Submit</button>
           <button id="resetButton">Reset</button>
         </div>
       </form>

@@ -6,6 +6,7 @@ let canvasHeight = 435;
 let isCanvasActive = false;
 let canvas;
 let nn;
+let render = "";
 
 // Function to handle form submission
 document
@@ -15,16 +16,23 @@ document
 
     clearCanvasVariables();
 
+    document.getElementById("submit").style.visibility = "hidden";
+
     // Show canvas container and activate canvas
     document.getElementById("canvasContainer").style.display = "flex";
+    var ele = document.getElementsByName("radio");
+    for (let i = 0; i < ele.length; i++) {
+      if (ele[i].checked) render = ele[i].value;
+    }
 
-    canvas = createCanvas(canvasWidth, canvasHeight, WEBGL);
+    if (render === "2D") {
+      canvas = createCanvas(canvasWidth, canvasHeight);
+    } else if (render === "3D") {
+      canvas = createCanvas(canvasWidth, canvasHeight, WEBGL);
+    }
     canvas.parent("canvasContainer"); // Attach canvas to #canvasContainer
 
-    canvas.style("background", "grey");
-    // canvas.style("border", "0.1px solid rgba(255, 255, 255, 0.36)");
-    // canvas.style("box-shadow", "8px 8px 21px black");
-    // canvas.style("border-radius", "15px");
+    canvas.style("background", "30");
 
     // Remove the <main> tag if it exists
     let mainElement = document.querySelector("main");
@@ -34,6 +42,7 @@ document
 
     // Initialize the neural network
     nn = new NeuralNetwork(2, 8, 1);
+    nn.setLearningRate(0.001);
 
     isCanvasActive = true;
   });
@@ -42,43 +51,44 @@ window.setup = function () {
   document.getElementById("canvasContainer").style.display = "none";
 };
 
-// window.draw = function () {
-//   if (!isCanvasActive) {
-//     return; // Don't execute draw until the form is submitted
-//   }
-//   for (let i = 0; i < 500; i++) {
-//     let data = random(training_data); // Correct way to pick random data
-//     nn.train(data.inputs, data.targets);
-//   }
-
-//   nn.setLearningRate(0.0001);
-//   let resolution = 5;
-//   let cols = width / resolution;
-//   let rows = height / resolution;
-//   for (let i = 0; i < cols; i++) {
-//     for (let j = 0; j < rows; j++) {
-//       let p = i / cols;
-//       let q = j / rows;
-//       let inputs = [p, q];
-//       let y = nn.feedForward(inputs);
-//       noStroke();
-//       fill(y * 255);
-//       rect(i * resolution, j * resolution, resolution, resolution);
-//     }
-//   }
-// };
-
 // 3D
 window.draw = function () {
   if (!isCanvasActive) {
     return; // Stop execution if the canvas is not active
   }
+  if (render === "2D") {
+    two_DRender();
+  } else if (render === "3D") {
+    three_DRender();
+  }
+};
 
+function two_DRender() {
+  for (let i = 0; i < 500; i++) {
+    let data = random(training_data); // Correct way to pick random data
+    nn.train(data.inputs, data.targets);
+  }
+
+  let resolution = 5;
+  let cols = width / resolution;
+  let rows = height / resolution;
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      let p = i / cols;
+      let q = j / rows;
+      let inputs = [p, q];
+      let y = nn.feedForward(inputs);
+      noStroke();
+      fill(y * 255);
+      rectMode(CENTER);
+      rect(i * resolution, j * resolution, resolution, resolution);
+    }
+  }
+}
+
+function three_DRender() {
   background(30);
   let rotationAngleZ = frameCount * 0.01;
-
-  // Shift the origin to the center of the canvas
-  // translate(width / 2, height / 2, 0);
 
   // Rotate for a better 3D perspective (optional)
   rotateX(PI / 4);
@@ -90,7 +100,6 @@ window.draw = function () {
     nn.train(data.inputs, data.targets);
   }
 
-  nn.setLearningRate(0.0001);
   let resolution = 4;
   let cols = width / resolution - 40;
   let rows = height / resolution - 40;
@@ -134,13 +143,14 @@ window.draw = function () {
       pop();
     }
   }
-};
+}
 
 // Function to clear all variables
 function clearCanvasVariables() {
   isCanvasActive = false;
   // Hide the canvas container
   document.getElementById("canvasContainer").style.display = "none";
+  render = "";
 
   // Remove any existing canvas
   if (canvas) {
@@ -149,11 +159,21 @@ function clearCanvasVariables() {
   loop();
 }
 
-document.getElementById("resetButton").addEventListener("click", function () {
-  resetEverything();
-});
+let resetInProgress = false; // Flag to check if reset is in progress
+
+document
+  .getElementById("resetButton")
+  .addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent form submission when reset is clicked
+
+    if (resetInProgress) return; // Prevent reset if it's already in progress
+
+    resetEverything(); // Call the reset function
+  });
 
 function resetEverything() {
+  resetInProgress = true; // Set the flag to true to indicate reset is happening
+
   // Clear previous canvas and points
   clearCanvasVariables();
 
@@ -166,6 +186,9 @@ function resetEverything() {
   // Optionally hide the canvas container again
   document.getElementById("canvasContainer").style.display = "block";
 
+  document.getElementById("submit").style.visibility = "visible";
+
   // Log or alert that everything has been reset
-  console.log("Everything has been reset.");
+
+  resetInProgress = false; // Set the flag to true to indicate reset is happening
 }
