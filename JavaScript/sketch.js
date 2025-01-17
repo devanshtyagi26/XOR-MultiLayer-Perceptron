@@ -17,7 +17,7 @@ document.getElementById("submit").addEventListener("click", function (event) {
 
   clearCanvasVariables();
 
-  // document.getElementById("submit").style.visibility = "hidden";
+  document.getElementById("submit").style.visibility = "hidden";
 
   // Show canvas container and activate canvas
   document.getElementById("canvasContainer").style.display = "flex";

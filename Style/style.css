@@ -7,6 +7,7 @@ body {
   background-image: url(../Assets/Background.svg);
   background-repeat: no-repeat;
   background-size: cover;
+  overflow: hidden;
 }
 
 section {
