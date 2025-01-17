@@ -145,6 +145,7 @@ section {
 }
 
 #hero .layout .overview,
+#hero .Summary,
 #hero .layout .rendering {
   height: 35rem;
   width: 35rem;
@@ -161,6 +162,23 @@ section {
   align-items: center;
 }
 
+#hero .Summary {
+  height: fit-content;
+  width: 10rem;
+  color: #fff;
+  font-family: Kodchasan;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 1rem;
+  position: absolute;
+  top: 12rem;
+  right: 1rem;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
 #hero .layout .overview {
   flex-direction: column;
   height: fit-content;

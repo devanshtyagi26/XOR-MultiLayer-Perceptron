@@ -25,10 +25,12 @@ document.getElementById("submit").addEventListener("click", function (event) {
   for (let i = 0; i < ele.length; i++) {
     if (ele[i].checked) render = ele[i].value;
   }
-
+  let summary = document.querySelector(".Summary");
+  summary.style.display = "flex";
   if (render === "2D") {
     canvas = createCanvas(canvasWidth, canvasHeight);
   } else if (render === "3D") {
+    summary.innerHTML = "The 3D version visualizes the XOR neural network's predictions as a red-to-yellow graph, where the height and color intensity represent the output. Red indicates values closer to 0, and yellow represents values closer to 1 (or vice-versa), dynamically updating as the network learns in real time."
     canvas = createCanvas(canvasWidth, canvasHeight, WEBGL);
   }
   canvas.parent("canvasContainer"); // Attach canvas to #canvasContainer
