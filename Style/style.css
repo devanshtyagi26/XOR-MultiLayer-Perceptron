@@ -144,6 +144,7 @@ section {
   line-height: normal;
 }
 
+#hero .layout .overview,
 #hero .layout .rendering {
   height: 35rem;
   width: 35rem;
@@ -158,4 +159,25 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#hero .layout .overview {
+  flex-direction: column;
+  height: fit-content;
+  width: 30rem;
+  color: #fff;
+  font-family: Kodchasan;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 1rem;
+  position: absolute;
+  bottom: 3rem;
+  left: 9rem;
+}
+
+#hero .layout .overview .heading {
+  font-size: 20px;
+  font-weight: bold;
 }
