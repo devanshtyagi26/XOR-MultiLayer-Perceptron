@@ -162,8 +162,22 @@ function clearCanvasVariables() {
   loop();
 }
 
+function resetEverything() {
+  // Clear previous canvas and points
+  clearCanvasVariables();
+
+  // Optionally reset form values or leave them as is
+  document.getElementById("canvasForm").reset(); // This will reset the form inputs if needed
+
+  // Disable the canvas
+  isCanvasActive = false;
+
+  // Optionally hide the canvas container again
+  document.getElementById("canvasContainer").style.display = "block";
+}
+
 document
   .getElementById("resetButton")
   .addEventListener("click", function (event) {
-    location.reload(); // Refresh the page
+    resetEverything();
   });
