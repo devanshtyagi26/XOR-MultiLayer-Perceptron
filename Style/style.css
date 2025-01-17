@@ -177,7 +177,33 @@ section {
   left: 9rem;
 }
 
-#hero .layout .overview .heading {
+#hero .layout .overview .heading,
+.overlay .heading {
   font-size: 20px;
   font-weight: bold;
+}
+
+.overlay {
+  height: 100vh;
+  width: 100vw;
+  background-color: black;
+  color: #fff;
+  font-family: Kodchasan;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  position: absolute;
+  z-index: 4;
+  padding: 1rem;
+  display: none;
+  overflow: hidden;
+}
+.overlay .color {
+  color: #9666d0;
 }
