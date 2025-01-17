@@ -5,7 +5,7 @@ let canvasWidth = 435;
 let canvasHeight = 435;
 let isCanvasActive = false;
 let canvas;
-let nn;
+let nn = null;
 let render = "";
 
 // Function to handle form submission
@@ -155,40 +155,13 @@ function clearCanvasVariables() {
   // Remove any existing canvas
   if (canvas) {
     canvas.remove();
+    canvas = null;
   }
   loop();
 }
 
-let resetInProgress = false; // Flag to check if reset is in progress
-
 document
   .getElementById("resetButton")
   .addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent form submission when reset is clicked
-
-    if (resetInProgress) return; // Prevent reset if it's already in progress
-
-    resetEverything(); // Call the reset function
+    location.reload(); // Refresh the page
   });
-
-function resetEverything() {
-  resetInProgress = true; // Set the flag to true to indicate reset is happening
-
-  // Clear previous canvas and points
-  clearCanvasVariables();
-
-  // Optionally reset form values or leave them as is
-  document.getElementById("canvasForm").reset(); // This will reset the form inputs if needed
-
-  // Disable the canvas
-  isCanvasActive = false;
-
-  // Optionally hide the canvas container again
-  document.getElementById("canvasContainer").style.display = "block";
-
-  document.getElementById("submit").style.visibility = "visible";
-
-  // Log or alert that everything has been reset
-
-  resetInProgress = false; // Set the flag to true to indicate reset is happening
-}
