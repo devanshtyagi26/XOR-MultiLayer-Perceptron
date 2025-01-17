@@ -1,51 +1,53 @@
 import NeuralNetwork from "./neuralNetwork.js";
 import { training_data } from "./trainingData.js";
 
-let canvasWidth = 435;
-let canvasHeight = 435;
+let canvasWidth = 535;
+let canvasHeight = 535;
 let isCanvasActive = false;
 let canvas;
 let nn = null;
 let render = "";
 
 // Function to handle form submission
-document
-  .getElementById("canvasForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent page reload
+// document
+//   .getElementById("canvasForm")
+//   .addEventListener("submit", function (event) {
+document.getElementById("submit").addEventListener("click", function (event) {
+  event.preventDefault(); // Prevent page reload
 
-    clearCanvasVariables();
+  clearCanvasVariables();
 
-    document.getElementById("submit").style.visibility = "hidden";
+  // document.getElementById("submit").style.visibility = "hidden";
 
-    // Show canvas container and activate canvas
-    document.getElementById("canvasContainer").style.display = "flex";
-    var ele = document.getElementsByName("radio");
-    for (let i = 0; i < ele.length; i++) {
-      if (ele[i].checked) render = ele[i].value;
-    }
+  // Show canvas container and activate canvas
+  document.getElementById("canvasContainer").style.display = "flex";
+  var ele = document.getElementsByName("radio");
+  for (let i = 0; i < ele.length; i++) {
+    if (ele[i].checked) render = ele[i].value;
+  }
 
-    if (render === "2D") {
-      canvas = createCanvas(canvasWidth, canvasHeight);
-    } else if (render === "3D") {
-      canvas = createCanvas(canvasWidth, canvasHeight, WEBGL);
-    }
-    canvas.parent("canvasContainer"); // Attach canvas to #canvasContainer
+  if (render === "2D") {
+    canvas = createCanvas(canvasWidth, canvasHeight);
+  } else if (render === "3D") {
+    canvas = createCanvas(canvasWidth, canvasHeight, WEBGL);
+  }
+  canvas.parent("canvasContainer"); // Attach canvas to #canvasContainer
 
-    canvas.style("background", "30");
+  canvas.style("background", "30");
+  canvas.style("border-radius", "20px");
 
-    // Remove the <main> tag if it exists
-    let mainElement = document.querySelector("main");
-    if (mainElement) {
-      mainElement.remove(); // This removes the <main> tag
-    }
+  // Remove the <main> tag if it exists
+  let mainElement = document.querySelector("main");
+  if (mainElement) {
+    mainElement.remove(); // This removes the <main> tag
+  }
 
-    // Initialize the neural network
-    nn = new NeuralNetwork(2, 8, 1);
-    nn.setLearningRate(0.001);
+  // Initialize the neural network
+  nn = new NeuralNetwork(2, 8, 1);
+  nn.setLearningRate(0.001);
 
-    isCanvasActive = true;
-  });
+  isCanvasActive = true;
+});
 
 window.setup = function () {
   document.getElementById("canvasContainer").style.display = "none";
@@ -87,7 +89,7 @@ function two_DRender() {
 }
 
 function three_DRender() {
-  background(30);
+  background(65, 31, 98);
   let rotationAngleZ = frameCount * 0.01;
 
   // Rotate for a better 3D perspective (optional)
