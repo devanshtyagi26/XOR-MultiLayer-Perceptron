@@ -4,6 +4,8 @@
 
 ---
 
+## ![Neuro XOR in Action](./Assets/GIF/Xor%20gif.gif)
+
 ## **Features**
 
 - **Real-time learning visualization**: Observe the neural network as it adjusts weights and biases during training.
