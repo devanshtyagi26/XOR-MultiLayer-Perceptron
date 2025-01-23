@@ -8,12 +8,8 @@ let canvas;
 let nn = null;
 let render = "";
 
-// Function to handle form submission
-// document
-//   .getElementById("canvasForm")
-//   .addEventListener("submit", function (event) {
-document.getElementById("submit").addEventListener("click", function (event) {
-  event.preventDefault(); // Prevent page reload
+  document.getElementById("submit").addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent page reload
 
   clearCanvasVariables();
 
